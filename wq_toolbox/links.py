@@ -227,8 +227,8 @@ class Link_Quality:
         Ss  = specific gravity of sediment (for soil usually between 2.65-2.80)
         d50 = mean sediment particle diameter (SI or US: mm)
         d   = depth (SI: m, US: ft)
-        qs  = sediment discharge per unit width (SI: kg/m-s, US: lb/ft-s)
-        Qs  = sediment discharge (SI: kg/s, US: lb/s)
+        qt  = sediment discharge per unit width (SI: kg/m-s, US: lb/ft-s)
+        Qt  = sediment discharge (SI: kg/s, US: lb/s)
         """
         # Get current time
         current_step = self.sim.current_time
@@ -250,33 +250,35 @@ class Link_Quality:
                 
                 #Calculate erosion
                 if self.sim._model.getSimUnit(0) == "US":
-                    g = 32.2    # ft/s^2
-                    yw = 62.4   # lb/ft^3
-                    theta = (d*So/((Ss-1)*d50))*(1/0.00328) # unitless
+                    g = 32.2            # ft/s^2
+                    yw = 62.4           # lbf/ft^3
+                    mm_ft = 0.00328     # ft/mm
+                    lb_mg = 453592      # mg/lb
+                    L_ft3 = 28.3168     # ft3/L
                     if v != 0.0:
-                        f = (2*g*So*d)/v**2     # unitless
-                        qs = 0.1*(1/f)*theta**(5/2)*yw*((Ss-1)*g*(d50*0.00328)**3)**(1/2) # lb/ft-s
-                        Qs = w*qs   # lb/s
+                        qt = 0.1*(1/((2*g*So*d)/v**2))*((d*So/((Ss-1)*d50))*(1/mm_ft))**(5/2)*Ss*yw*((Ss-1)*g*(d50*mm_ft)**3)**(1/2) # lb/ft-s
+                        Qt = w*qt       # lb/s
                     else:
-                        Qs = 0.0
+                        Qt = 0.0
                     if Q !=0.0:
-                        Cnew = (Qs/Q)*(453592/28.3168)   # mg/L
+                        Cnew = (Qt/Q)*(lb_mg/L_ft3)   # mg/L
                         Cnew = max(Cin, Cin+Cnew)
                         # Set new concentration
                         self.sim._model.setLinkPollutant(link, pollutant, Cnew)
 
                 else:
-                    g = 9.81    # m/s^2
-                    yw = 1000   # kg/m^3
-                    theta = (d*So/((Ss-1)*d50))*(1/0.001)   # unitless
+                    g = 9.81            # m/s^2
+                    yw = 9807           # N/m^3
+                    mm_m = 0.001        # m/mm
+                    kg_mg = 1000000     # mg/kg
+                    L_m3 =  1000        # m3/L
                     if v != 0.0:
-                        f = (2*g*So*d)/(v*0.305)**2     # unitless
-                        qs = 0.1*(1/f)*theta**(5/2)*yw*((Ss-1)*g*(d50*0.001)**3)**(1/2) # kg/m-s
-                        Qs = w*qs   # kg/s
+                        qt = 0.1*(1/((2*g*So*d)/v**2))*((d*So/((Ss-1)*d50))*(1/mm_m))**(5/2)*Ss*yw*((Ss-1)*g*(d50*mm_m)**3)**(1/2) # kg/m-s
+                        Qt = w*qt       # kg/s
                     else:
-                        Qs = 0.0
+                        Qt = 0.0
                     if Q != 0.0:
-                        Cnew = ((Qs/Q)*1000)  # mg/L
+                        Cnew = (Qt/Q)*(kg_mg/L_m3)      # mg/L
                         Cnew = max(Cin, Cin+Cnew)
                         # Set new concentration
                         self.sim._model.setLinkPollutant(link, pollutant, Cnew)
@@ -296,8 +298,8 @@ class Link_Quality:
         Ss  = specific gravity of sediment (for soil usually between 2.65-2.80)
         d50 = mean sediment particle diameter (SI or US: mm)
         d   = depth (SI: m, US: ft)
-        qs  = sediment discharge per unit width (SI: kg/m-s, US: lb/ft-s)
-        Qs  = sediment discharge (SI: kg/s, US: lb/s)
+        qt  = sediment discharge per unit width (SI: kg/m-s, US: lb/ft-s)
+        Qt  = sediment discharge (SI: kg/s, US: lb/s)
         k   = reaction rate constant (SI: m/hr, US: ft/hr)
         C_s = constant residual concentration that always remains (SI or US: mg/L)
         """
@@ -323,33 +325,33 @@ class Link_Quality:
                 
                 #Calculate erosion
                 if self.sim._model.getSimUnit(0) == "US":
-                    g = 32.2    # ft/s^2
-                    yw = 62.4   # lb/ft^3
-                    theta = (d*So/((Ss-1)*d50))*(1/0.00328) # unitless
+                    g = 32.2            # ft/s^2
+                    yw = 62.4           # lbf/ft^3
+                    mm_ft = 0.00328     # ft/mm
+                    lb_mg = 453592      # mg/lb
+                    L_ft3 = 28.3168     # ft3/L
                     if v != 0.0:
-                        f = (2*g*So*d)/v**2     # unitless
-                        qs = 0.1*(1/f)*theta**(5/2)*yw*((Ss-1)*g*(d50*0.00328)**3)**(1/2) # lb/ft-s
-                        Qs = w*qs   # lb/s
+                        qt = 0.1*(1/((2*g*So*d)/v**2))*((d*So/((Ss-1)*d50))*(1/mm_ft))**(5/2)*Ss*yw*((Ss-1)*g*(d50*mm_ft)**3)**(1/2) # lb/ft-s
+                        Qt = w*qt       # lb/s
                     else:
-                        Qs = 0.0
+                        Qt = 0.0
                     if Q !=0.0:
-                        Cnew = (Qs/Q)*(453592/28.3168)   # mg/L
+                        Cnew = (Qt/Q)*(lb_mg/L_ft3)   # mg/L
                         Cnew = max(Cin, Cin+Cnew)
-                        # Set new concentration
-                        self.sim._model.setLinkPollutant(link, pollutant, Cnew)
 
                 else:
-                    g = 9.81    # m/s^2
-                    yw = 1000   # kg/m^3
-                    theta = (d*So/((Ss-1)*d50))*(1/0.001)   # unitless
+                    g = 9.81            # m/s^2
+                    yw = 9807           # N/m^3
+                    mm_m = 0.001        # m/mm
+                    kg_mg = 1000000     # mg/kg
+                    L_m3 =  1000        # m3/L
                     if v != 0.0:
-                        f = (2*g*So*d)/(v*0.305)**2     # unitless
-                        qs = 0.1*(1/f)*theta**(5/2)*yw*((Ss-1)*g*(d50*0.001)**3)**(1/2) # kg/m-s
-                        Qs = w*qs   # kg/s
+                        qt = 0.1*(1/((2*g*So*d)/v**2))*((d*So/((Ss-1)*d50))*(1/mm_m))**(5/2)*Ss*yw*((Ss-1)*g*(d50*mm_m)**3)**(1/2) # kg/m-s
+                        Qt = w*qt       # kg/s
                     else:
-                        Qs = 0.0
+                        Qt = 0.0
                     if Q != 0.0:
-                        Cnew = ((Qs/Q)*1000)  # mg/L
+                        Cnew = (Qt/Q)*(kg_mg/L_m3)      # mg/L
                         Cnew = max(Cin, Cin+Cnew)
                 #Calculate gravity settling  
                 if d != 0.0:

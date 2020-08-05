@@ -2,7 +2,7 @@
 # @Author: Brooke Mason
 # @Date:   2020-01-15 09:57:05
 # @Last Modified by:   Brooke Mason
-# @Last Modified time: 2020-08-05 14:07:03
+# @Last Modified time: 2020-08-05 16:04:03
 
 # Import required modules
 from pyswmm import Simulation, Nodes, Links
@@ -79,7 +79,7 @@ with Simulation("./modifiedMBDoyle_NO_check.inp") as sim:
         Wt_of = Wetland.total_outflow
         Wetland_outflow.append(Wt_of)
 
-        """
+        
         # Calculate DO concentration in tank layers
         # reset DO if tank is empty
         if Wt_d <= 0.01:
@@ -157,7 +157,7 @@ with Simulation("./modifiedMBDoyle_NO_check.inp") as sim:
             Wetland_DO2.append(DO2)
             Wetland_DO3.append(DO3)
         Wetland_k.append(k_ni)
-        """
+        
 
         # Calculate NO concentration in tanks
         # Get parameters to calculate NO
@@ -212,10 +212,10 @@ Wetland_cumload = np.cumsum(Wetland_load)
 #----------------------------------------------------------------------#
 # Confirm CSTR matches steady state equilibrium concentration
 # Found average V,Q,r,Co for simulation above 
-V = np.mean(Wetland_volume)
-Q = np.mean(Wetland_inflow)
-k = 0.000029*3
-Co = np.mean(Wetland_Cin)
+V = np.mean(Wetland_volume[34560:51840])
+Q = np.mean(Wetland_inflow[34560:51840])
+k = np.mean(Wetland_k[34560:51840])
+Co = np.mean(Wetland_Cin[34560:51840])
 Cn = Co /((1+(k*V/Q))**3)
 print("SS Conc:", Cn)
 print("Model Conc:", Wetland_conc[-1])
@@ -228,8 +228,8 @@ Wetland_concSS  = [Cn]*len(Wetland_conc)
 plt.title("Wetland")
 plt.plot(Wetland_conc, color='#B08CA1', linewidth=2, label='Model')
 plt.plot(Wetland_concSS, 'k--', linewidth=2, label='SS Conc')
+plt.ylabel("Concentration (mg/L)")
 plt.xlabel("Time (days)")
-plt.xlim(0,34560)
 plt.xticks([0,17280,34560],["0","1","2"])
 plt.legend()
 plt.show()

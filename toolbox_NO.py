@@ -2,7 +2,7 @@
 # @Author: Brooke Mason
 # @Date:   2020-01-15 09:57:05
 # @Last Modified by:   Brooke Mason
-# @Last Modified time: 2020-07-03 12:50:58
+# @Last Modified time: 2020-08-04 15:21:15
 
 # Import required modules
 from pyswmm import Simulation, Nodes, Links
@@ -123,7 +123,7 @@ with Simulation("./modifiedMBDoyle_NO.inp") as sim:
         Wt_v = Wetland.volume
         Wetland_volume.append(Wt_v)
         Wt_of = Wetland.total_outflow
-        Wetland_outflow.append(DB_of)
+        Wetland_outflow.append(Wt_of)
         #Wt_bp = Wtlnd_bypass.flow
         #Wtlnd_bp_inflows.append(Wt_bp)
         Ch_f = Channel.flow
@@ -133,7 +133,7 @@ with Simulation("./modifiedMBDoyle_NO.inp") as sim:
 
         # Calculate DO concentration in tank layers
         # reset DO if tank is empty
-        if DB_d <= 0.01:
+        if Wt_d <= 0.01:
             t1 = 0
             t2 = 0
             t3 = 0
@@ -145,7 +145,7 @@ with Simulation("./modifiedMBDoyle_NO.inp") as sim:
             Wetland_DO3.append(DO3)
             k_ni = 0.0
         
-        elif 0.01 < DB_d <= 3.00:
+        elif 0.01 < Wt_d <= 3.00:
             # Calculate DO concentration in first layer
             t1 += dt
             t2 = 0
@@ -162,7 +162,7 @@ with Simulation("./modifiedMBDoyle_NO.inp") as sim:
             Wetland_DO2.append(DO2)
             Wetland_DO3.append(DO3)
         
-        elif 3.0 < DB_d <= 6.0:
+        elif 3.0 < Wt_d <= 6.0:
             # Calculate DO concentration in first two layers
             t1 += dt
             t2 += dt
@@ -391,7 +391,7 @@ with Simulation("./modifiedMBDoyle_NO.inp") as sim:
         Wt_v = Wetland.volume
         Wetland_volumeC.append(Wt_v)
         Wt_of = Wetland.total_outflow
-        Wetland_outflowC.append(DB_of)
+        Wetland_outflowC.append(Wt_of)
         #Wt_bp = Wtlnd_bypass.flow
         #Wtlnd_bp_inflowsC.append(Wt_bp)
         Ch_f = Channel.flow
@@ -401,7 +401,7 @@ with Simulation("./modifiedMBDoyle_NO.inp") as sim:
 
         # Calculate DO concentration in tank layers
         # reset DO if tank is empty
-        if DB_d <= 0.01:
+        if Wt_d <= 0.01:
             t1 = 0
             t2 = 0
             t3 = 0
@@ -413,7 +413,7 @@ with Simulation("./modifiedMBDoyle_NO.inp") as sim:
             Wetland_DO3C.append(DO3)
             k_ni = 0.0
         
-        elif 0.01 < DB_d <= 3.00:
+        elif 0.01 < Wt_d <= 3.00:
             # Calculate DO concentration in first layer
             t1 += dt
             t2 = 0
@@ -430,7 +430,7 @@ with Simulation("./modifiedMBDoyle_NO.inp") as sim:
             Wetland_DO2C.append(DO2)
             Wetland_DO3C.append(DO3)
         
-        elif 3.0 < DB_d <= 6.0:
+        elif 3.0 < Wt_d <= 6.0:
             # Calculate DO concentration in first two layers
             t1 += dt
             t2 += dt
@@ -660,9 +660,9 @@ ax[5,0].set_ylabel("Outflow (m³/s)", size=6)
 
 ax[6,0].plot(Ellsworth_cumload, 'k--')
 ax[6,0].plot(Ellsworth_cumloadC, color='#6CC6D1')
-ax[6,0].set_yticks([0,2,4])
-ax[6,0].set_yticklabels(["0","2","4"], size=6)
-ax[6,0].set_ylim(-0.1,4)
+ax[6,0].set_yticks([0,1,2])
+ax[6,0].set_yticklabels(["0","1","2"], size=6)
+ax[6,0].set_ylim(-0.1,2.25)
 ax[6,0].set_xlim(0,190080)
 ax[6,0].set_xticks([0,34560,69120,103680,138240,172800])
 ax[6,0].set_xticklabels(["0","2","4","6","8","10"], size=6)
@@ -716,9 +716,9 @@ ax[5,1].set_xlim(0,190080)
 
 ax[6,1].plot(DBasin_cumload, "k--")
 ax[6,1].plot(DBasin_cumloadC, color='#3B4D7A')
-ax[6,1].set_yticks([0,2,4])
-ax[6,1].set_yticklabels(["0","2","4"], size=6)
-ax[6,1].set_ylim(-0.1,4)
+ax[6,1].set_yticks([0,1,2])
+ax[6,1].set_yticklabels(["0","1","2"], size=6)
+ax[6,1].set_ylim(-0.1,2.25)
 ax[6,1].set_xlim(0,190080)
 ax[6,1].set_xticks([0,34560,69120,103680,138240,172800])
 ax[6,1].set_xticklabels(["0","2","4","6","8","10"], size=6)
@@ -778,9 +778,9 @@ ax[5,2].set_xlim(0,190080)
 
 ax[6,2].plot(Wetland_cumload, "k--")
 ax[6,2].plot(Wetland_cumloadC, color='#B08CA1')
-ax[6,2].set_yticks([0,2,4])
-ax[6,2].set_yticklabels(["0","2","4"], size=6)
-ax[6,2].set_ylim(-0.1,4)
+ax[6,2].set_yticks([0,1,2])
+ax[6,2].set_yticklabels(["0","1","2"], size=6)
+ax[6,2].set_ylim(-0.1,2.25)
 ax[6,2].set_xlim(0,190080)
 ax[6,2].set_xticks([0,34560,69120,103680,138240,172800])
 ax[6,2].set_xticklabels(["0","2","4","6","8","10"], size=6)
@@ -832,9 +832,9 @@ ax[5,3].set_xlim(0,190080)
 
 ax[6,3].plot(Channel_cumload, "k--")
 ax[6,3].plot(Channel_cumloadC, color='#695580')
-ax[6,3].set_yticks([0,2,4])
-ax[6,3].set_yticklabels(["0","2","4"], size=6)
-ax[6,3].set_ylim(-0.1,4)
+ax[6,3].set_yticks([0,1,2])
+ax[6,3].set_yticklabels(["0","1","2"], size=6)
+ax[6,3].set_ylim(-0.1,2.25)
 ax[6,3].set_xlim(0,190080)
 ax[6,3].set_xticks([0,34560,69120,103680,138240,172800])
 ax[6,3].set_xticklabels(["0","2","4","6","8","10"], size=6)
